@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recurso Educativo: Tipos de Discapacidad</title>
+    <style>
+        :root {
+            --primary-blue: #1a5276;
+            --secondary-blue: #2980b9;
+            --brand-green: #78bb1e; /* Tu color verde */
+            --brand-green-light: #f1f9e9;
+            --dark-green: #5e9317;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #475569;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            align-items: center;
+        }
+
+        /* --- MAPA MENTAL (ESCRITORIO) --- */
+        .mindmap-wrapper {
+            position: relative;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .center-node {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+            color: white;
+            padding: 25px;
+            border-radius: 50%;
+            width: 180px;
+            height: 180px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            z-index: 10;
+            border: 6px solid var(--white);
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .branch-node {
+            position: absolute;
+            background: var(--white);
+            border: 2px solid var(--brand-green);
+            padding: 14px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 700;
+            color: var(--primary-blue);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            z-index: 5;
+            text-align: center;
+            min-width: 160px;
+        }
+
+        .branch-node:hover {
+            transform: translateY(-3px);
+            background: var(--brand-green-light);
+            border-color: var(--brand-green);
+        }
+
+        .branch-node.active {
+            background: var(--brand-green);
+            color: white;
+            box-shadow: 0 0 20px rgba(120, 187, 30, 0.4);
+            transform: scale(1.05);
+        }
+
+        .connector-svg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        line {
+            stroke: #cbd5e1;
+            stroke-width: 2.5;
+            stroke-dasharray: 6;
+        }
+
+        /* Posiciones exactas */
+        .node-1 { top: 5%; left: 50%; transform: translateX(-50%); }
+        .node-2 { top: 28%; right: 2%; }
+        .node-3 { bottom: 28%; right: 2%; }
+        .node-4 { bottom: 5%; left: 50%; transform: translateX(-50%); }
+        .node-5 { bottom: 28%; left: 2%; }
+        .node-6 { top: 28%; left: 2%; }
+
+        /* --- PANEL DE INFORMACIÓN --- */
+        .info-panel {
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: none;
+            animation: slideIn 0.4s ease-out;
+            border: 1px solid #e2e8f0;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .info-image-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            cursor: zoom-in;
+            background: #f1f5f9;
+            position: relative;
+        }
+
+        .info-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .info-image-container:hover .info-image {
+            transform: scale(1.08);
+        }
+
+        .zoom-badge {
+            position: absolute;
+            top: 10px; right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .info-content {
+            padding: 30px;
+        }
+
+        .info-tag {
+            display: inline-block;
+            background: var(--brand-green-light);
+            color: var(--dark-green);
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .info-title {
+            color: var(--primary-blue);
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .info-description {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-light);
+        }
+
+        /* --- MODAL --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+        }
+
+        /* --- RESPONSIVE OPTIMIZADO --- */
+        @media (max-width: 900px) {
+            body { padding: 10px; }
+            
+            .main-container {
+                display: flex;
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .mindmap-wrapper {
+                height: auto;
+                display: block;
+            }
+
+            .connector-svg, .center-node { display: none; }
+
+            .branch-node {
+                position: relative !important;
+                top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+                transform: none !important;
+                width: 100%;
+                margin-bottom: 10px;
+                text-align: left;
+                padding: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+
+            .branch-node::after {
+                content: '→';
+                font-size: 1.2rem;
+                opacity: 0.5;
+            }
+
+            .branch-node.active::after {
+                content: '↓';
+                opacity: 1;
+            }
+
+            .info-panel.mobile-active {
+                display: block;
+                margin: 5px 0 20px 0;
+                border: 2px solid var(--brand-green);
+                animation: expandDown 0.3s ease-out;
+            }
+
+            @keyframes expandDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .info-image-container { aspect-ratio: 4 / 3; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container" id="main-container">
+        
+        <div class="mindmap-wrapper" id="mindmap">
+            <svg class="connector-svg" id="svg-canvas">
+                <line x1="50%" y1="50%" x2="50%" y2="5%"></line>
+                <line x1="50%" y1="50%" x2="98%" y2="28%"></line>
+                <line x1="50%" y1="50%" x2="98%" y2="72%"></line>
+                <line x1="50%" y1="50%" x2="50%" y2="95%"></line>
+                <line x1="50%" y1="50%" x2="2%" y2="72%"></line>
+                <line x1="50%" y1="50%" x2="2%" y2="28%"></line>
+            </svg>
+
+            <div class="center-node">Tipos de Discapacidad</div>
+
+            <div class="branch-node node-1" data-type="fisica">Física</div>
+            <div class="branch-node node-2" data-type="sensorial">Sensorial</div>
+            <div class="branch-node node-3" data-type="intelectual">Intelectual o mental</div>
+            <div class="branch-node node-4" data-type="siquica">Síquica</div>
+            <div class="branch-node node-5" data-type="visceral">Visceral</div>
+            <div class="branch-node node-6" data-type="multiple">Múltiple</div>
+        </div>
+
+        <div class="info-panel" id="info-panel">
+            <div class="info-image-container" onclick="openZoom()">
+                <div class="zoom-badge">🔍 Clic para ampliar</div>
+                <img src="" alt="" class="info-image" id="panel-img">
+            </div>
+            <div class="info-content">
+                <span class="info-tag">Definición</span>
+                <h2 class="info-title" id="panel-title"></h2>
+                <p class="info-description" id="panel-desc"></p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal" id="zoom-modal" onclick="this.style.display='none'">
+        <img src="" id="modal-img">
+    </div>
+
+    <script>
+        const contentData = {
+            fisica: {
+                title: "Discapacidad Física",
+                img: "img/fisica.png",
+                desc: "Se define como la imposibilidad que limita el desempeño de la movilidad de la persona afectada. Esto significa que las partes afectadas son los brazos y/o las piernas."
+            },
+            sensorial: {
+                title: "Discapacidad Sensorial",
+                img: "img/sensorial.png",
+                desc: "Personas con deficiencias visuales, auditivas, de la comunicación y/o del lenguaje."
+            },
+            intelectual: {
+                title: "Discapacidad Intelectual o Mental",
+                img: "img/intelectual.png",
+                desc: "Función intelectual significativamente por debajo del promedio, con limitaciones en dos o más funciones respecto a: comunicación, auto-cuidado, habilidades sociales, autonomía, salud y seguridad, funcionalidad académica o de trabajo."
+            },
+            siquica: {
+                title: "Discapacidad Síquica",
+                img: "img/siquica.png",
+                desc: "Presenta trastornos en el comportamiento adaptativo, previsiblemente permanentes."
+            },
+            visceral: {
+                title: "Discapacidad Visceral",
+                img: "img/visceral.png",
+                desc: "Son aquellos individuos que, debido a alguna deficiencia en la función de órganos internos, por ejemplo, el cardíaco o el diabético, se encuentran impedidos de desarrollar su vida con total plenitud."
+            },
+            multiple: {
+                title: "Discapacidad Múltiple",
+                img: "img/multiple.png",
+                desc: "Se caracteriza por la presencia de distintas discapacidades en diferentes grados y combinaciones: discapacidad intelectual, auditiva, motora, visual, autismo, parálisis cerebral, algunos síndromes específicos, epilepsia, problemas de comportamiento."
+            }
+        };
+
+        const nodes = document.querySelectorAll('.branch-node');
+        const infoPanel = document.getElementById('info-panel');
+        const mainContainer = document.getElementById('main-container');
+
+        nodes.forEach(node => {
+            node.addEventListener('click', function() {
+                const type = this.getAttribute('data-type');
+                const data = contentData[type];
+
+                // Actualizar imagen y texto
+                document.getElementById('panel-img').src = data.img;
+                document.getElementById('panel-title').innerText = data.title;
+                document.getElementById('panel-desc').innerText = data.desc;
+
+                // Estilo activo
+                nodes.forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+
+                if (window.innerWidth <= 900) {
+                    // Mover el panel debajo del botón clicado
+                    this.after(infoPanel);
+                    infoPanel.classList.add('mobile-active');
+                    infoPanel.style.display = 'block';
+                    
+                    // Scroll suave
+                    setTimeout(() => {
+                        const offset = infoPanel.getBoundingClientRect().top + window.scrollY - 20;
+                        window.scrollTo({ top: offset, behavior: 'smooth' });
+                    }, 100);
+                } else {
+                    mainContainer.appendChild(infoPanel);
+                    infoPanel.classList.remove('mobile-active');
+                    infoPanel.style.display = 'block';
+                }
+            });
+        });
+
+        function openZoom() {
+            const modal = document.getElementById('zoom-modal');
+            const modalImg = document.getElementById('modal-img');
+            modalImg.src = document.getElementById('panel-img').src;
+            modal.style.display = 'flex';
+        }
+
+        // Placeholder si la imagen falla
+        document.getElementById('panel-img').onerror = function() {
+            this.src = 'https://via.placeholder.com/800x600/f1f5f9/78bb1e?text=Imagen+Informativa';
+        };
+    </script>
+</body>
+</html>
