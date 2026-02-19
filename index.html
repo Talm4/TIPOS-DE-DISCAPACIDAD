@@ -1,328 +1,239 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recurso Educativo SCORM: Discapacidad</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-blue: #1a5276;
-            --secondary-blue: #2980b9;
-            --brand-green: #78bb1e;
-            --brand-green-light: #f1f9e9;
-            --light-bg: #ffffff; /* Fondo blanco puro para facilitar integración en IFrames */
-            --text-dark: #1e293b;
-            --text-light: #475569;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tipos de Discapacidad</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', sans-serif;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 
-        body {
-            background-color: var(--light-bg);
-            color: var(--text-dark);
-            min-height: 100vh;
-            padding: 15px;
-            overflow-x: hidden;
-        }
+<style>
+:root{
+  --primary-blue:#1a5276;
+  --secondary-blue:#2980b9;
+  --brand-green:#78bb1e;
+  --brand-green-light:#f1f9e9;
+  --text-dark:#1e293b;
+  --text-light:#475569;
+  --shadow:0 10px 20px rgba(0,0,0,.08);
+  --radius:16px;
+}
 
-        /* Contenedor principal adaptable a SCORM */
-        .main-container {
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 30px;
-            padding-top: 20px;
-        }
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:'Inter',sans-serif;
+}
 
-        /* --- MAPA MENTAL --- */
-        .mindmap-wrapper {
-            position: relative;
-            height: 550px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+body{
+  background:#ffffff;
+  color:var(--text-dark);
+  padding:20px 15px 40px 15px;
+}
 
-        .center-node {
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            color: white;
-            padding: 20px;
-            border-radius: 50%;
-            width: 160px;
-            height: 160px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            font-weight: 800;
-            font-size: 0.95rem;
-            box-shadow: var(--shadow);
-            z-index: 10;
-            border: 4px solid #fff;
-            text-transform: uppercase;
-        }
+.main-container{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:25px;
+}
 
-        .branch-node {
-            position: absolute;
-            background: var(--white);
-            border: 2px solid var(--brand-green);
-            padding: 12px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-            color: var(--primary-blue);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            z-index: 5;
-            text-align: center;
-            min-width: 150px;
-            background: #fff;
-        }
+.title{
+  text-align:center;
+  font-weight:800;
+  font-size:1.6rem;
+  color:var(--primary-blue);
+}
 
-        /* Feedback visual de "Visto" para el estudiante */
-        .branch-node.visited {
-            border-color: #cbd5e1;
-            color: #94a3b8;
-        }
+.mindmap{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
 
-        .branch-node:hover {
-            transform: scale(1.03);
-            background: var(--brand-green-light);
-        }
+.node{
+  background:#fff;
+  border:2px solid var(--brand-green);
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+  cursor:pointer;
+  transition:.3s ease;
+  font-weight:600;
+  color:var(--primary-blue);
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
+}
 
-        .branch-node.active {
-            background: var(--brand-green);
-            color: white !important;
-            border-color: var(--brand-green);
-            box-shadow: 0 0 15px rgba(120, 187, 30, 0.3);
-        }
+.node:hover{
+  background:var(--brand-green-light);
+  transform:translateY(-3px);
+}
 
-        .connector-svg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
+.node.active{
+  background:var(--brand-green);
+  color:#fff;
+  border-color:var(--brand-green);
+}
 
-        line {
-            stroke: #e2e8f0;
-            stroke-width: 2;
-            stroke-dasharray: 5;
-        }
+.info-panel{
+  display:none;
+  background:#fff;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  animation:fadeIn .4s ease;
+}
 
-        /* Posicionamiento */
-        .node-1 { top: 5%; left: 50%; transform: translateX(-50%); }
-        .node-2 { top: 25%; right: 2%; }
-        .node-3 { bottom: 25%; right: 2%; }
-        .node-4 { bottom: 5%; left: 50%; transform: translateX(-50%); }
-        .node-5 { bottom: 25%; left: 2%; }
-        .node-6 { top: 25%; left: 2%; }
+.info-image{
+  width:100%;
+  max-height:300px;
+  object-fit:cover;
+}
 
-        /* --- PANEL DE INFORMACIÓN --- */
-        .info-panel {
-            background: #fff;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            box-shadow: var(--shadow);
-            display: none;
-            height: fit-content;
-            overflow: hidden;
-            position: sticky;
-            top: 20px;
-        }
+.info-content{
+  padding:25px;
+}
 
-        .info-image-container {
-            width: 100%;
-            aspect-ratio: 16 / 10;
-            overflow: hidden;
-            background: #f8fafc;
-            border-bottom: 3px solid var(--brand-green);
-        }
+.info-title{
+  font-size:1.4rem;
+  font-weight:800;
+  color:var(--primary-blue);
+  margin-bottom:10px;
+}
 
-        .info-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+.info-desc{
+  color:var(--text-light);
+  line-height:1.6;
+}
 
-        .info-content {
-            padding: 25px;
-        }
+#completion-msg{
+  display:none;
+  padding:15px;
+  background:var(--brand-green);
+  color:#fff;
+  text-align:center;
+  border-radius:8px;
+  font-weight:600;
+  margin-top:10px;
+  animation:fadeIn .4s ease;
+}
 
-        .info-title {
-            color: var(--primary-blue);
-            font-size: 1.4rem;
-            margin-bottom: 12px;
-            font-weight: 800;
-        }
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
 
-        .info-description {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: var(--text-light);
-        }
-
-        /* Mensaje de completado */
-        #completion-msg {
-            display: none;
-            margin-top: 20px;
-            padding: 15px;
-            background: var(--brand-green);
-            color: white;
-            text-align: center;
-            border-radius: 8px;
-            font-weight: 600;
-            animation: bounce 0.5s ease;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 900px) {
-            .main-container {
-                display: flex;
-                flex-direction: column;
-            }
-            .mindmap-wrapper { height: auto; display: block; }
-            .connector-svg, .center-node { display: none; }
-            .branch-node {
-                position: relative !important;
-                top: auto !important; left: auto !important;
-                margin-bottom: 10px;
-                width: 100%;
-                text-align: left;
-            }
-            .info-panel {
-                position: relative;
-                top: 0;
-                margin-top: -5px;
-                margin-bottom: 20px;
-                border-radius: 0 0 16px 16px;
-                border-top: none;
-            }
-        }
-    </style>
+@media(max-width:600px){
+  body{
+    padding:15px 10px 30px 10px;
+  }
+  .info-content{
+    padding:20px;
+  }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="main-container">
-        
-        <div class="mindmap-wrapper" id="mindmap">
-            <svg class="connector-svg">
-                <line x1="50%" y1="50%" x2="50%" y2="5%"></line>
-                <line x1="50%" y1="50%" x2="98%" y2="25%"></line>
-                <line x1="50%" y1="50%" x2="98%" y2="75%"></line>
-                <line x1="50%" y1="50%" x2="50%" y2="95%"></line>
-                <line x1="50%" y1="50%" x2="2%" y2="75%"></line>
-                <line x1="50%" y1="50%" x2="2%" y2="25%"></line>
-            </svg>
+<div class="main-container">
 
-            <div class="center-node">Tipos de Discapacidad</div>
+  <div class="title">Tipos de Discapacidad</div>
 
-            <div class="branch-node node-1" data-type="fisica">Discapacidad Física</div>
-            <div class="branch-node node-2" data-type="sensorial">Discapacidad Sensorial</div>
-            <div class="branch-node node-3" data-type="intelectual">Intelectual o Mental</div>
-            <div class="branch-node node-4" data-type="siquica">Discapacidad Psíquica</div>
-            <div class="branch-node node-5" data-type="visceral">Discapacidad Visceral</div>
-            <div class="branch-node node-6" data-type="multiple">Discapacidad Múltiple</div>
-        </div>
+  <div class="mindmap">
+    <div class="node" data-type="fisica">Discapacidad Física</div>
+    <div class="node" data-type="sensorial">Discapacidad Sensorial</div>
+    <div class="node" data-type="intelectual">Intelectual o Mental</div>
+    <div class="node" data-type="siquica">Discapacidad Psíquica</div>
+    <div class="node" data-type="visceral">Discapacidad Visceral</div>
+    <div class="node" data-type="multiple">Discapacidad Múltiple</div>
+  </div>
 
-        <div class="right-column">
-            <div class="info-panel" id="info-panel">
-                <div class="info-image-container">
-                    <img src="" alt="" class="info-image" id="panel-img">
-                </div>
-                <div class="info-content">
-                    <h2 class="info-title" id="panel-title"></h2>
-                    <p class="info-description" id="panel-desc"></p>
-                </div>
-            </div>
-
-            <div id="completion-msg">
-                ¡Excelente! Has revisado todos los puntos. <br>Puedes continuar con la lección.
-            </div>
-        </div>
-
+  <div class="info-panel" id="infoPanel">
+    <img id="panelImg" class="info-image" src="" alt="">
+    <div class="info-content">
+      <div class="info-title" id="panelTitle"></div>
+      <div class="info-desc" id="panelDesc"></div>
     </div>
+  </div>
 
-    <script>
-        // Datos de contenido
-        const contentData = {
-            fisica: { title: "Física", img: "img/fisica.png", desc: "Afecta la movilidad, coordinación o equilibrio. Puede ser congénita o adquirida, limitando el desplazamiento o manipulación de objetos." },
-            sensorial: { title: "Sensorial", img: "img/sensorial.png", desc: "Relacionada con los sentidos. Principalmente deficiencias visuales (ceguera o baja visión) y auditivas (sordera o hipoacusia)." },
-            intelectual: { title: "Intelectual", img: "img/intelectual.png", desc: "Limitaciones en el funcionamiento intelectual y en conductas adaptativas (comunicación, autocuidado y habilidades sociales)." },
-            siquica: { title: "Psíquica", img: "img/siquica.png", desc: "Alteraciones en los procesos cognitivos y afectivos del desarrollo, consideradas como trastornos en el comportamiento adaptativo." },
-            visceral: { title: "Visceral", img: "img/visceral.png", desc: "Deficiencia en la función de órganos internos (cardíacos, renales, diabéticos) que impiden llevar una vida con plenitud física." },
-            multiple: { title: "Múltiple", img: "img/multiple.png", desc: "Presencia de dos o más discapacidades de forma simultánea, lo que requiere apoyos generalizados en diversas áreas." }
-        };
+  <div id="completion-msg">
+    ¡Excelente! Has revisado todos los tipos de discapacidad. Puedes continuar.
+  </div>
 
-        const nodes = document.querySelectorAll('.branch-node');
-        const infoPanel = document.getElementById('info-panel');
-        const visitedNodes = new Set();
+</div>
 
-        nodes.forEach(node => {
-            node.addEventListener('click', function() {
-                const type = this.getAttribute('data-type');
-                const data = contentData[type];
+<script>
 
-                // Actualizar Panel
-                document.getElementById('panel-img').src = data.img;
-                document.getElementById('panel-title').innerText = data.title;
-                document.getElementById('panel-desc').innerText = data.desc;
+const data={
+  fisica:{
+    title:"Física",
+    img:"img/fisica.png",
+    desc:"Afecta la movilidad, coordinación o equilibrio. Puede limitar el desplazamiento o manipulación de objetos."
+  },
+  sensorial:{
+    title:"Sensorial",
+    img:"img/sensorial.png",
+    desc:"Deficiencias visuales, auditivas o del lenguaje que afectan la percepción y comunicación."
+  },
+  intelectual:{
+    title:"Intelectual o Mental",
+    img:"img/intelectual.png",
+    desc:"Limitaciones en el funcionamiento intelectual y conductas adaptativas como comunicación y autonomía."
+  },
+  siquica:{
+    title:"Psíquica",
+    img:"img/siquica.png",
+    desc:"Trastornos del comportamiento adaptativo considerados previsiblemente permanentes."
+  },
+  visceral:{
+    title:"Visceral",
+    img:"img/visceral.png",
+    desc:"Deficiencias en órganos internos como cardíacos o metabólicos que afectan la vida diaria."
+  },
+  multiple:{
+    title:"Múltiple",
+    img:"img/multiple.png",
+    desc:"Presencia simultánea de dos o más discapacidades en diferentes grados."
+  }
+};
 
-                // Estilos de navegación
-                nodes.forEach(n => n.classList.remove('active'));
-                this.classList.add('active');
-                this.classList.add('visited');
+const nodes=document.querySelectorAll('.node');
+const panel=document.getElementById('infoPanel');
+const visited=new Set();
 
-                // Lógica de tracking para SCORM
-                visitedNodes.add(type);
-                checkCompletion();
+nodes.forEach(n=>{
+  n.addEventListener('click',function(){
+    const type=this.dataset.type;
+    const info=data[type];
 
-                // Mostrar panel
-                if (window.innerWidth <= 900) {
-                    this.after(infoPanel);
-                    infoPanel.style.display = 'block';
-                    setTimeout(() => infoPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
-                } else {
-                    infoPanel.style.display = 'block';
-                }
-            });
-        });
+    document.getElementById('panelImg').src=info.img;
+    document.getElementById('panelTitle').innerText=info.title;
+    document.getElementById('panelDesc').innerText=info.desc;
 
-        function checkCompletion() {
-            if (visitedNodes.size === Object.keys(contentData).length) {
-                document.getElementById('completion-msg').style.display = 'block';
-                
-                // --- COMUNICACIÓN SCORM (Si aplica) ---
-                // Si el LMS detecta la API de SCORM, aquí enviamos el "Completed"
-                if(typeof(LMSSetValue) !== 'undefined') {
-                    LMSSetValue("cmi.core.lesson_status", "completed");
-                    LMSCommit("");
-                }
-                // También enviamos un mensaje por si está en un Iframe de Articulate/Rise
-                window.parent.postMessage("completed", "*");
-            }
-        }
+    nodes.forEach(x=>x.classList.remove('active'));
+    this.classList.add('active');
 
-        // Error handler para imágenes locales
-        document.getElementById('panel-img').onerror = function() {
-            this.src = 'https://via.placeholder.com/600x400/f1f5f9/78bb1e?text=Discapacidad';
-        };
-    </script>
+    panel.style.display='block';
+    panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+
+    visited.add(type);
+
+    if(visited.size===Object.keys(data).length){
+      document.getElementById('completion-msg').style.display='block';
+      window.parent.postMessage("completed","*");
+    }
+  });
+});
+
+document.getElementById('panelImg').onerror=function(){
+  this.src="https://via.placeholder.com/800x400/f1f5f9/78bb1e?text=Imagen+Ilustrativa";
+};
+
+</script>
+
 </body>
 </html>
-
